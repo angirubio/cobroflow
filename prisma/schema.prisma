@@ -1,0 +1,98 @@
+// CobroFlow Lite - Prisma schema
+// See prisma/README or project spec for data model rationale.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  users    User[]
+  invoices Invoice[]
+
+  @@map("organizations")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  orgId        String   @map("org_id")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  logoUrl      String?  @map("logo_url")
+  emailTone    EmailTone @default(professional) @map("email_tone")
+  emailCustomMessage String? @map("email_custom_message")
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@map("users")
+}
+
+enum EmailTone {
+  friendly
+  professional
+  strict
+}
+
+enum InvoiceStatus {
+  unpaid
+  paid
+  deleted
+}
+
+model Invoice {
+  id             String        @id @default(uuid())
+  orgId          String        @map("org_id")
+  customerName   String        @map("customer_name")
+  customerEmail  String        @map("customer_email")
+  amount         Decimal       @db.Decimal(12, 2)
+  currency       String        @default("EUR") @db.Char(3)
+  invoiceDate    DateTime      @map("invoice_date") @db.Date
+  dueDate        DateTime      @map("due_date") @db.Date
+  status         InvoiceStatus @default(unpaid)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  paidAt         DateTime?     @map("paid_at")
+
+  reminderSentAt1 DateTime? @map("reminder_sent_at_1")
+  reminderSentAt2 DateTime? @map("reminder_sent_at_2")
+  reminderSentAt3 DateTime? @map("reminder_sent_at_3")
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  emailLogs    EmailLog[]
+
+  @@index([orgId, status])
+  @@index([orgId, dueDate])
+  @@map("invoices")
+}
+
+enum EmailStatus {
+  sent
+  failed
+  bounced
+}
+
+model EmailLog {
+  id             String      @id @default(uuid())
+  invoiceId      String      @map("invoice_id")
+  sentAt         DateTime    @default(now()) @map("sent_at")
+  reminderNumber Int         @map("reminder_number")
+  emailTo        String      @map("email_to")
+  subject        String
+  status         EmailStatus @default(sent)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("email_logs")
+}
