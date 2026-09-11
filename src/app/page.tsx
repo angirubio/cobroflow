@@ -79,8 +79,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-gray-200 py-8 text-center text-sm text-gray-500">
-        CobroFlow Lite · Hecho en España
+      <footer className="flex flex-col items-center gap-2 border-t border-gray-200 py-8 text-center text-sm text-gray-500">
+        CobroFlow Lite
+        <a href="https://angirubio.com"
+          className="flex items-center justify-center gap-1.5 rounded-sm transition-colors hover:text-neutral-200">
+          <img src="/icon-ar.png" alt="" className="h-8 w-8 rounded-full object-cover" />
+          Sitio creado por Angi Rubio
+        </a>
       </footer>
     </main>
   );
