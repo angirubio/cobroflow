@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { BetaBadge } from "@/components/ui/beta-badge";
 
 const PLANS = [
   {
@@ -27,7 +28,10 @@ export default function LandingPage() {
     <main>
       <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <span className="text-lg font-bold">CobroFlow</span>
+          <span className="flex items-center gap-2 text-lg font-bold">
+            CobroFlow
+            <BetaBadge />
+          </span>
           <nav className="flex items-center gap-3">
             <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
               Iniciar sesión

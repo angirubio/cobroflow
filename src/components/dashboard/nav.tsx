@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { BetaBadge } from "@/components/ui/beta-badge";
 
 const LINKS = [
   { href: "/dashboard", label: "Facturas" },
@@ -24,8 +25,9 @@ export function DashboardNav() {
     <header className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="text-lg font-bold">
+          <Link href="/dashboard" className="flex items-center gap-2 text-lg font-bold">
             CobroFlow
+            <BetaBadge />
           </Link>
           <nav className="hidden gap-1 sm:flex">
             {LINKS.map((link) => (
